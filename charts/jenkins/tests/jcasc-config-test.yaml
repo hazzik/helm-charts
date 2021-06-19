@@ -44,8 +44,8 @@ tests:
                   defaultsProviderTemplate: ""
                   connectTimeout: "5"
                   readTimeout: "15"
-                  jenkinsUrl: "http://RELEASE-NAME-jenkins:8080"
-                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent:50000"
+                  jenkinsUrl: "http://RELEASE-NAME-jenkins.default.svc.cluster.local:8080"
+                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent.default.svc.cluster.local:50000"
                   maxRequestsPerHostStr: "32"
                   name: "kubernetes"
                   namespace: "default"
@@ -60,6 +60,7 @@ tests:
                       - name: "jnlp"
                         alwaysPullImage: false
                         args: "^${computer.jnlpmac} ^${computer.name}"
+                        command: 
                         envVars:
                           - envVar:
                               key: "JENKINS_URL"
@@ -162,8 +163,8 @@ tests:
                   defaultsProviderTemplate: ""
                   connectTimeout: "5"
                   readTimeout: "15"
-                  jenkinsUrl: "http://RELEASE-NAME-jenkins.controller-namespace:8080"
-                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent.controller-namespace:50000"
+                  jenkinsUrl: "http://RELEASE-NAME-jenkins.controller-namespace.svc.cluster.local:8080"
+                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent.controller-namespace.svc.cluster.local:50000"
                   maxRequestsPerHostStr: "32"
                   name: "kubernetes"
                   namespace: "jenkins-agents"
@@ -178,6 +179,7 @@ tests:
                       - name: "jnlp"
                         alwaysPullImage: false
                         args: "^${computer.jnlpmac} ^${computer.name}"
+                        command: 
                         envVars:
                           - envVar:
                               key: "JENKINS_URL"
@@ -207,6 +209,7 @@ tests:
                       - name: "jnlp"
                         alwaysPullImage: false
                         args: "^${computer.jnlpmac} ^${computer.name}"
+                        command: 
                         envVars:
                           - envVar:
                               key: "JENKINS_URL"
@@ -455,8 +458,8 @@ tests:
                   defaultsProviderTemplate: "my-defaults"
                   connectTimeout: "11"
                   readTimeout: "12"
-                  jenkinsUrl: "http://my-release-jenkins:8080"
-                  jenkinsTunnel: "my-release-jenkins-agent:50000"
+                  jenkinsUrl: "http://my-release-jenkins.other.svc.cluster.local:8080"
+                  jenkinsTunnel: "my-release-jenkins-agent.other.svc.cluster.local:50000"
                   maxRequestsPerHostStr: "32"
                   name: "kubernetes"
                   namespace: "other"
@@ -597,8 +600,8 @@ tests:
                   defaultsProviderTemplate: ""
                   connectTimeout: "5"
                   readTimeout: "15"
-                  jenkinsUrl: "http://RELEASE-NAME-jenkins:8080"
-                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent:50000"
+                  jenkinsUrl: "http://RELEASE-NAME-jenkins.default.svc.cluster.local:8080"
+                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent.default.svc.cluster.local:50000"
                   maxRequestsPerHostStr: "32"
                   name: "kubernetes"
                   namespace: "default"
@@ -613,6 +616,7 @@ tests:
                       - name: "jnlp"
                         alwaysPullImage: false
                         args: "^${computer.jnlpmac} ^${computer.name}"
+                        command: 
                         envVars:
                           - envVar:
                               key: "JENKINS_URL"
@@ -700,8 +704,8 @@ tests:
                   defaultsProviderTemplate: ""
                   connectTimeout: "5"
                   readTimeout: "15"
-                  jenkinsUrl: "http://RELEASE-NAME-jenkins:8080"
-                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent:50000"
+                  jenkinsUrl: "http://RELEASE-NAME-jenkins.default.svc.cluster.local:8080"
+                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent.default.svc.cluster.local:50000"
                   maxRequestsPerHostStr: "32"
                   name: "kubernetes"
                   namespace: "default"
@@ -716,6 +720,7 @@ tests:
                       - name: "jnlp"
                         alwaysPullImage: false
                         args: "^${computer.jnlpmac} ^${computer.name}"
+                        command: 
                         envVars:
                           - envVar:
                               key: "JENKINS_URL"
@@ -801,8 +806,8 @@ tests:
                   defaultsProviderTemplate: ""
                   connectTimeout: "5"
                   readTimeout: "15"
-                  jenkinsUrl: "http://RELEASE-NAME-jenkins:8080"
-                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent:50000"
+                  jenkinsUrl: "http://RELEASE-NAME-jenkins.default.svc.cluster.local:8080"
+                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent.default.svc.cluster.local:50000"
                   maxRequestsPerHostStr: "32"
                   name: "kubernetes"
                   namespace: "default"
@@ -817,6 +822,7 @@ tests:
                       - name: "jnlp"
                         alwaysPullImage: false
                         args: "^${computer.jnlpmac} ^${computer.name}"
+                        command: 
                         envVars:
                           - envVar:
                               key: "JENKINS_URL"
@@ -904,8 +910,8 @@ tests:
                   defaultsProviderTemplate: ""
                   connectTimeout: "5"
                   readTimeout: "15"
-                  jenkinsUrl: "http://RELEASE-NAME-jenkins:8080"
-                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent:50000"
+                  jenkinsUrl: "http://RELEASE-NAME-jenkins.default.svc.cluster.local:8080"
+                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent.default.svc.cluster.local:50000"
                   maxRequestsPerHostStr: "32"
                   name: "kubernetes"
                   namespace: "default"
@@ -920,6 +926,7 @@ tests:
                       - name: "jnlp"
                         alwaysPullImage: false
                         args: "^${computer.jnlpmac} ^${computer.name}"
+                        command: 
                         envVars:
                           - envVar:
                               key: "JENKINS_URL"
@@ -1008,8 +1015,8 @@ tests:
                   defaultsProviderTemplate: ""
                   connectTimeout: "5"
                   readTimeout: "15"
-                  jenkinsUrl: "http://RELEASE-NAME-jenkins:8080"
-                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent:50000"
+                  jenkinsUrl: "http://RELEASE-NAME-jenkins.default.svc.cluster.local:8080"
+                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent.default.svc.cluster.local:50000"
                   maxRequestsPerHostStr: "32"
                   name: "kubernetes"
                   namespace: "default"
@@ -1024,6 +1031,7 @@ tests:
                       - name: "jnlp"
                         alwaysPullImage: false
                         args: "^${computer.jnlpmac} ^${computer.name}"
+                        command: 
                         envVars:
                           - envVar:
                               key: "JENKINS_URL"
@@ -1111,8 +1119,8 @@ tests:
                   defaultsProviderTemplate: ""
                   connectTimeout: "5"
                   readTimeout: "15"
-                  jenkinsUrl: "http://RELEASE-NAME-jenkins:8080"
-                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent:50000"
+                  jenkinsUrl: "http://RELEASE-NAME-jenkins.default.svc.cluster.local:8080"
+                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent.default.svc.cluster.local:50000"
                   maxRequestsPerHostStr: "32"
                   name: "kubernetes"
                   namespace: "default"
@@ -1127,6 +1135,7 @@ tests:
                       - name: "jnlp"
                         alwaysPullImage: false
                         args: "^${computer.jnlpmac} ^${computer.name}"
+                        command: 
                         envVars:
                           - envVar:
                               key: "JENKINS_URL"
@@ -1213,8 +1222,8 @@ tests:
                   defaultsProviderTemplate: ""
                   connectTimeout: "5"
                   readTimeout: "15"
-                  jenkinsUrl: "http://RELEASE-NAME-jenkins:8080"
-                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent:50000"
+                  jenkinsUrl: "http://RELEASE-NAME-jenkins.controller-namespace.svc.cluster.local:8080"
+                  jenkinsTunnel: "RELEASE-NAME-jenkins-agent.controller-namespace.svc.cluster.local:50000"
                   maxRequestsPerHostStr: "32"
                   name: "kubernetes"
                   namespace: "controller-namespace"

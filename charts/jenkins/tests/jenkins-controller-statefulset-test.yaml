@@ -44,7 +44,7 @@ tests:
             template:
               metadata:
                 annotations:
-                  checksum/config: 8ce33705643160d06b4062deacb00ee60e290dc4bd9069053b81dcac91279785
+                  checksum/config: e7818e32b5bbbb17988f6a688ca77fe20facffa3886facf2b27a7c8846cf9df6
                 labels:
                   app.kubernetes.io/component: jenkins-controller
                   app.kubernetes.io/instance: my-release
@@ -67,7 +67,7 @@ tests:
                     value: "50000"
                   - name: CASC_JENKINS_CONFIG
                     value: /var/jenkins_home/casc_configs
-                  image: jenkins/jenkins:2.277.1
+                  image: jenkins/jenkins:2.289.1-jdk11
                   imagePullPolicy: Always
                   livenessProbe:
                     failureThreshold: 5
@@ -142,7 +142,7 @@ tests:
                     value: POST
                   - name: REQ_RETRY_CONNECT
                     value: "10"
-                  image: kiwigrid/k8s-sidecar:0.1.275
+                  image: kiwigrid/k8s-sidecar:1.12.2
                   imagePullPolicy: IfNotPresent
                   name: config-reload
                   resources: {}
@@ -155,7 +155,7 @@ tests:
                 - command:
                   - sh
                   - /var/jenkins_config/apply_config.sh
-                  image: jenkins/jenkins:2.277.1
+                  image: jenkins/jenkins:2.289.1-jdk11
                   imagePullPolicy: Always
                   name: init
                   resources:
@@ -381,3 +381,91 @@ tests:
             runAsUser: 4444
             supplementalGroups:
               - 5555
+  - it: test 2 additional secrets
+    set:
+      controller.additionalSecrets:
+        - name: something
+          value: secret
+        - name: anotherthing
+          value: anothersecret
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[6]
+          value:
+            mountPath: /run/secrets/something
+            name: jenkins-additional-secrets
+            readOnly: true
+            subPath: something
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[7]
+          value:
+            mountPath: /run/secrets/anotherthing
+            name: jenkins-additional-secrets
+            readOnly: true
+            subPath: anotherthing
+      - equal:
+          path: spec.template.spec.volumes[3]
+          value:
+            name: jenkins-additional-secrets
+            secret:
+              secretName: my-release-jenkins-additional-secrets
+  - it: test templated environment variables
+    set:
+      testValue: some-value
+      controller.initContainerEnv:
+      - name: "TEST_ENV_VAR_INIT"
+        value: "test-env-var-init"
+      - name: "TEST_ENV_VAR_INIT_TEMPLATED"
+        value: '{{ .Values.testValue }}'
+      controller.sidecars.configAutoReload.env:
+      - name: "TEST_ENV_VAR_CONFIG"
+        value: "test-env-var-config"
+      - name: "TEST_ENV_VAR_CONFIG_TEMPLATED"
+        value: '{{ .Values.testValue }}'
+      controller.containerEnv:
+      - name: "TEST_ENV_VAR_CONTAINER"
+        value: "test-env-var-container"
+      - name: "TEST_ENV_VAR__CONTAINER_TEMPLATED"
+        value: '{{ .Values.testValue }}'
+    asserts:
+      - contains:
+          path: spec.template.spec.initContainers[0].env
+          content:
+            name: "TEST_ENV_VAR_INIT"
+            value: "test-env-var-init"
+      - contains:
+          path: spec.template.spec.initContainers[0].env
+          content:
+            name: "TEST_ENV_VAR_INIT_TEMPLATED"
+            value: 'some-value'
+      - contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: "TEST_ENV_VAR_CONFIG"
+            value: "test-env-var-config"
+      - contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: "TEST_ENV_VAR_CONFIG_TEMPLATED"
+            value: 'some-value'
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: "TEST_ENV_VAR_CONTAINER"
+            value: "test-env-var-container"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: "TEST_ENV_VAR__CONTAINER_TEMPLATED"
+            value: 'some-value'
+  - it: overrides container args
+    set:
+      controller.overrideArgs:
+        - --httpPort=8080
+        - --requestHeaderSize=32768
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].args
+          value:
+            - --httpPort=8080
+            - --requestHeaderSize=32768

@@ -16,6 +16,7 @@ The following tables list the configurable parameters of the Jenkins chart and t
 | `namespaceOverride`               | Override the deployment namespace    | Not set (`Release.Namespace`)             |
 | `controller.componentName`            | Jenkins controller name                  | `jenkins-controller`                          |
 | `controller.testEnabled`              | Can be used to disable rendering test resources when using helm template | `true`                         |
+| `controller.cloudName`                       | Name of default cloud configuration  | `kubernetes`                              |
 
 #### Jenkins Configuration as Code (JCasC)
 
@@ -73,16 +74,18 @@ The following tables list the configurable parameters of the Jenkins chart and t
 
 | Parameter                         | Description                          | Default                                   |
 | --------------------------------- | ------------------------------------ | ----------------------------------------- |
-| `controller.installPlugins`       | List of Jenkins plugins to install. If you don't want to install plugins set it to `[]` | `kubernetes:1.29.2 workflow-aggregator:2.6 git:4.6.0 configuration-as-code:1.47` |
+| `controller.installPlugins`       | List of Jenkins plugins to install. If you don't want to install plugins set it to `false` | `kubernetes:1.29.2 workflow-aggregator:2.6 git:4.7.1 configuration-as-code:1.47` |
 | `controller.additionalPlugins`    | List of Jenkins plugins to install in addition to those listed in controller.installPlugins | `[]` |
 | `controller.initializeOnce`       | Initialize only on first install. Ensures plugins do not get updated inadvertently. Requires `persistence.enabled` to be set to `true`. | `false` |
 | `controller.overwritePlugins`     | Overwrite installed plugins on start.| `false`                                   |
 | `controller.overwritePluginsFromImage` | Keep plugins that are already installed in the controller image.| `true`            |
+| `controller.installLatestPlugins`      | Set to false to download the minimum required version of all dependencies. | `false` |
 
 #### Jenkins Agent Listener
 
 | Parameter                                    | Description                                     | Default      |
 | -------------------------------------------- | ----------------------------------------------- | ------------ |
+| `controller.agentListenerEnabled`            | Create Agent listener service                   | `true`       |
 | `controller.agentListenerPort`               | Listening port for agents                       | `50000`      |
 | `controller.agentListenerHostPort`           | Host port to listen for agents                  | Not set      |
 | `controller.agentListenerNodePort`           | Node port to listen for agents                  | Not set      |
@@ -95,7 +98,7 @@ The following tables list the configurable parameters of the Jenkins chart and t
 | Parameter                         | Description                          | Default                                   |
 | --------------------------------- | ------------------------------------ | ----------------------------------------- |
 | `controller.image`                    | Controller image name                     | `jenkins/jenkins`                         |
-| `controller.tag`                      | Controller image tag                      | `lts`                                     |
+| `controller.tag`                      | Controller image tag                      | `2.289.1-jdk11`                           |
 | `controller.imagePullPolicy`          | Controller image pull policy              | `Always`                                  |
 | `controller.imagePullSecretName`      | Controller image pull secret              | Not set                                   |
 | `controller.resources`                | Resources allocation (Requests and Limits) | `{requests: {cpu: 50m, memory: 256Mi}, limits: {cpu: 2000m, memory: 4096Mi}}`|
@@ -224,6 +227,9 @@ The following tables list the configurable parameters of the Jenkins chart and t
 | --------------------------------- | ------------------------------------ | ----------------------------------------- |
 | `controller.adminUser`                | Admin username (and password) created as a secret if adminSecret is true | `admin` |
 | `controller.adminPassword`            | Admin password (and user) created as a secret if adminSecret is true | Random value |
+| `controller.additionalSecrets`        | List of additional secrets to create and mount according to [JCasC docs](https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/docs/features/secrets.adoc#kubernetes-secrets) | `[]` |
+| `controller.additionalExistingSecrets`| List of additional existing secrets to mount according to [JCasC docs](https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/docs/features/secrets.adoc#kubernetes-secrets) | `[]` |
+| `controller.secretClaims`             | List of `SecretClaim` resources to create | `[]` |
 
 #### Kubernetes NetworkPolicy
 

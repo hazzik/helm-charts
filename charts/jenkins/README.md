@@ -109,10 +109,10 @@ Once you built the image and pushed it to your registry you can specify it in yo
 controller:
   image: "registry/my-jenkins"
   tag: "v1.2.3"
-  installPlugins: []
+  installPlugins: false
 ```
 
-Notice: `installPlugins` is set to an empty list to disable plugin download. In this case, the image `registry/my-jenkins:v1.2.3` must have the plugins specified as default value for [the `controller.installPlugins` directive](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/VALUES_SUMMARY.md#jenkins-plugins) to ensure that the configuration side-car system works as expected.
+Notice: `installPlugins` is set to false to disable plugin download. In this case, the image `registry/my-jenkins:v1.2.3` must have the plugins specified as default value for [the `controller.installPlugins` directive](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/VALUES_SUMMARY.md#jenkins-plugins) to ensure that the configuration side-car system works as expected.
 
 In case you are using a private registry you can use 'imagePullSecretName' to specify the name of the secret to use when pulling the image:
 
@@ -121,7 +121,7 @@ controller:
   image: "registry/my-jenkins"
   tag: "v1.2.3"
   imagePullSecretName: registry-secret
-  installPlugins: []
+  installPlugins: false
 ```
 
 ### External URL Configuration
@@ -339,52 +339,76 @@ It is possible to define which storage class to use, by setting `persistence.sto
 If set to a dash (`-`), dynamic provisioning is disabled.
 If the storage class is set to null or left undefined (`""`), the default provisioner is used (gp2 on AWS, standard on GKE, AWS & OpenStack).
 
-#### Additional Secrets
+### Additional Secrets
 
-Additional secrets can be mounted into the Jenkins controller through the chart. A common use case might be identity provider credentials if using an external LDAP or OIDC-based identity provider. The secret may then be referenced in JCasC configuration (see [JCasC configuration](#configuration-as-code)).
-
-Example secret (deployed separately from Helm chart):
-```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: idp-config
-stringData:
-  client_id: abc123
-  client_secret: xyz999
-```
-
-`values.yaml` persistence section, mounting the secrets:
-```yaml
-persistence:
-  enabled: true
-  volumes:
-    - name: idp-config
-      secret:
-        secretName: idp-config
-  mounts:
-    - name: idp-config
-      mountPath: /run/secrets/client_id
-      subPath: client_id
-      readOnly: true
-    - name: idp-config
-      mountPath: /run/secrets/client_secret
-      subPath: client_secret
-      readOnly: true
-```
+Additional secrets and Additional Existing Secrets,
+can be mounted into the Jenkins controller through the chart or created using `controller.additionalSecrets` or `controller.additionalExistingSecrets`.  
+A common use case might be identity provider credentials if using an external LDAP or OIDC-based identity provider.
+The secret may then be referenced in JCasC configuration (see [JCasC configuration](#configuration-as-code)).
 
 `values.yaml` controller section, referencing mounted secrets:
 ```yaml
 controller:
+  # the 'name' and 'keyName' are concatenated with a '-' in between, so for example:
+  # an existing secret "secret-credentials" and a key inside it named "github-password" should be used in Jcasc as ${secret-credentials-github-password}
+  # 'name' and 'keyName' must be lowercase RFC 1123 label must consist of lower case alphanumeric characters or '-',
+  # and must start and end with an alphanumeric character (e.g. 'my-name',  or '123-abc')
+  additionalExistingSecrets:
+    - name: secret-credentials
+      keyName: github-username
+    - name: secret-credentials
+      keyName: github-password
+    - name: secret-credentials
+      keyName: token
+  
+  additionalSecrets:
+    - name: client_id
+      value: abc123
+    - name: client_secret
+      value: xyz999
   JCasC:
     securityRealm: |
       oic:
         clientId: ${client_id}
         clientSecret: ${client_secret}
         ...
+    configScripts:
+      jenkins-casc-configs: |
+        credentials:
+          system:
+            domainCredentials:
+            - credentials:
+              - string:
+                  description: "github access token"
+                  id: "github_app_token"
+                  scope: GLOBAL
+                  secret: ${secret-credentials-token}
+              - usernamePassword:
+                  description: "github access username password"
+                  id: "github_username_pass"
+                  password: ${secret-credentials-github-password}
+                  scope: GLOBAL
+                  username: ${secret-credentials-github-username}
 ```
 
 For more information, see [JCasC documentation](https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/docs/features/secrets.adoc#kubernetes-secrets).
+
+### Secret Claims from HashiCorp Vault
+
+It's possible for this chart to generate `SecretClaim` resources in order to automatically create and maintain Kubernetes `Secrets` from HashiCorp [Vault](https://www.vaultproject.io/) via [`kube-vault-controller`](https://github.com/roboll/kube-vault-controller)
+
+These `Secrets` can then be referenced in the same manner as Additional Secrets above.
+
+This can be achieved by defining required Secret Claims within `controller.secretClaims`, as follows:
+```yaml
+controller:
+  secretClaims:
+    - name: jenkins-secret
+      path: secret/path
+    - name: jenkins-short-ttl
+      path: secret/short-ttl-path
+      renew: 60
+```
 
 ### RBAC
 

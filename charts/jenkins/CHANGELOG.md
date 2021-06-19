@@ -12,9 +12,96 @@ Use the following links to reference issues, PRs, and commits prior to v2.6.0.
 The change log until v1.5.7 was auto-generated based on git commits.
 Those entries include a reference to the git commit to be able to get more details.
 
-## 3.3.0
+## 3.5.0
 
 Move jenkins web root outside of home dir
+
+## 3.4.0
+
+configAutoReload container updated from `kiwigrid/k8s-sidecar:0.1.275` to `kiwigrid/k8s-sidecar:1.12.2`
+
+## 3.3.23
+
+Make `controller.ingress.resourceRootUrl` compatible with api version networking.k8s.io/v1 on k8s >= 1.19.x
+
+## 3.3.22
+
+Update Jenkins image and appVersion to jenkins lts release version 2.289.1
+
+
+## 3.3.21
+`persistence.mounts` additionally mount to init container to allow custom CA certificate keystore
+
+## 3.3.18
+Added `controller.overrideArgs` so any cli argument can be passed to the WAR.
+
+## 3.3.17
+Correct docs on disabling plugin installation
+
+## 3.3.16
+Support generating `SecretClaim` resources in order to read secrets from HashiCorp Vault into Kubernetes using `kube-vault-controller`.
+
+## 3.3.15
+Prevent `controller.httpsKeyStore` from improperly being quoted, leading to an invalid location on disk
+
+## 3.3.14
+Correct docs on disabling plugin installation
+
+## 3.3.13
+Update plugins
+
+## 3.3.12
+Add `controller.additionalExistingSecrets` property
+
+## 3.3.11
+Add support for disabling the Agent listener service via `controller.agentListenerEnabled`.
+
+## 3.3.10
+Update Jenkins image and appVersion to jenkins lts release version 2.277.4
+
+## 3.3.9
+* Change helper template so user defined `agent.jenkinsUrl` value will always be used, if set
+* Simplify logic for `jenkinsUrl` and `jenkinsTunnel` generation: always use fully qualified address
+
+## 3.3.8
+Update Jenkins image and appVersion to jenkins lts release version 2.277.3
+
+## 3.3.7
+fix controller-ingress line feed bug
+
+## 3.3.6
+
+Update Git plugin version to v4.7.1
+Update ldap plugin version to v2.5
+
+## 3.3.5
+
+Use tpl function for environment vars. Fixes [https://github.com/jenkinsci/helm-charts/issues/324]
+
+## 3.3.4
+
+Update Jenkins image and appVersion to jenkins lts release version 2.277.2
+
+
+## 3.3.3
+
+Enable setting `controller.installLatestPlugins` to set whether to download the minimum required version of all dependencies.
+
+## 3.3.2
+
+Add `controller.additionalSecrets` documentation
+
+## 3.3.1
+
+Add `controller.additionalSecrets` property
+
+## 3.3.0
+
+Change default Jenkins image to `jdk11` variant
+
+## 3.2.6
+
+Add missing `controller.jenkinsUrlProtocol` property
 
 ## 3.2.5
 
@@ -67,7 +154,7 @@ Fixed issue for the AgentListener where it was not possible to attribute a NodeP
 
 ## 3.1.9
 
-Upgrade kubernetes plugin t0 1.29.0 and CasC plugin to 1.47
+Upgrade kubernetes plugin to 1.29.0 and CasC plugin to 1.47
 
 ## 3.1.8
 
